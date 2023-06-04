@@ -17,18 +17,44 @@ namespace JWTAuth.Controllers
             return "Authenticated with jwt";
         }
         [HttpGet]
-        [Route("GetData2")]
-        public String GetData2()
+        [Route("Gehlgh_hgn")]
+        public IActionResult AddUser([FromHeader] string xppkey)
         {
-            return "withoud un Authenticated with jwt";
+          
+            return Ok(new { message = "Authenticated withoud jwt " + xppkey
+            }) ;
         }
 
         [HttpPost]
         [Authorize]
         [Route("AddUser")]
-        public String AddUser(User user)
+        public String AddUser2(User user)
         {
             return "Authenticated with jwt " + user.Username;
+        }
+        [HttpPost]
+        [Route("uploadfile")]
+        [Authorize]
+        public Response Upload([FromForm] FileModel fileModel)
+        {
+            Response response = new Response();
+            try
+            {
+                string path = Path.Combine(@"D:\dotnet", fileModel.FileName);
+                using(Stream stream=new FileStream(path,FileMode.Create))
+                {
+                    fileModel.File.CopyTo(stream);
+                }
+                response.StatusCode = 200;
+                response.message = "Image updated successfully";
+
+            }catch (Exception ex)
+            {
+                response.StatusCode = 500;
+                response.message = ex.Message;
+            }
+
+            return response;
         }
     }
 }
